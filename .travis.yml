@@ -5,16 +5,19 @@ matrix:
     dist: bionic
     compiler: gcc
     arch: amd64
+    env: TPCP_OPTIONS=amd64_linux_gcc_o0
     
 before_install:
 - export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
 - export CXX_FLAGS=${CXX_FLAGS}" "${ENV_CXX_FLAGS}
+- sudo apt-get update
+- sudo apt-get -y install makeinfo
 
 script:
 - mkdir -p build
 - cd build
 - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} -DCMAKE_BUILD_TYPE=Release
-  -DBUILD_TESTS=ON ..
+  -DBUILD_TESTS=ON -DTPCP_OPTIONS=${TPCP_OPTIONS} ..
 - make
 
 branches:
@@ -28,8 +31,6 @@ deploy:
   provider: releases
   api_key:
     secure: pmWWyI3ycU/JDzqsfFHWSNbuew3snAcgV2BvfzckcQvP+dz3lVS9dyycMhsA2DjQPfzVegyL1derwrJOWnqKJnTB6M85CWWVeZLS8yBhWdNKu9m+uY5hqmSjqyRkBYBX45x8tL0TpLi240IZeCy0PH8V6E+mF7s8aekxLKDutx+YLlvmDX1ru0PYqmpbpnlYnZNZ6jQ6xCxjKlBem0RJC5JZ02WbkJ0uNt14Hsc9odiRWHsygvDBjUkzE9QnBlpOq5w4z3n/sxOcMgYn516laCjxpWlz9tGrScvwnM/IMuT1zwlWNfMCrM9QYVLFJ1T3+dedqTOe1vKvJmgjt4vQchmCIN2xKXL/KxveYHFxh22Z/2tCNgWX2iqU/jM4486VuBxbTMZMf/BC5QZECBZDqI6+6iS+gBUWm0WmZXfGLeohq80gcbPbepby4Fp5pLeYLNQTraJ3z0m/vmFdPN8a222FHpTut7CFthZsFA07Bwd8y1TFUfOq6GNOLzRi5h3AEhGd4SSkaGg7ju0msnivIcddxLYAFczPxynmR0YuSWtSOiirViHSsGUciquAlPYD+/9AZWUup+D0Qe4YGw6ORuwcvVusP6zvcYpK5kdFK0CB+qChv3SGlk80rmYNhUNbEmMwm/PsfvxFeQ7NATEYlmlEMPLY/r6Kr2vEYV0oWIk=
-  file: 
-  - build/sqlite-build/sqlite3
-  - build/tar-build/src/tar
+  file: build/final-exe/**/*
   on:
     repo: tpcp-project/DebloatingTestSuite

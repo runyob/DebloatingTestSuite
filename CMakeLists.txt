@@ -7,6 +7,11 @@ project (ONR_TPCP_TEST_SUITE)
 # Submodules are built using ExternalProject
 include(ExternalProject)
 
+### ALL FINAL BUILT EXECUTABLES SHOULD BE PLACED IN THE FOLLOWING DIRECTORY:
+# Either rename the executable to tell what build options were used,
+# or place the executable in a subdirectory named based on build options
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/final-exe)
+
 # Recurse into subdirectories.
 # Two rules:
 # (1) if subproject uses cmake, simply recurse into it
@@ -36,20 +41,19 @@ include(ExternalProject)
 #   BUILD_COMMAND ./b2 ${BOOST_B2_ARGS} headers
 #   INSTALL_COMMAND ./b2 ${BOOST_B2_ARGS} install)
 
-
 ExternalProject_Add(sqlite
   SOURCE_DIR   ${CMAKE_SOURCE_DIR}/sqlite
   BINARY_DIR   ${CMAKE_BINARY_DIR}/sqlite-build
   CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/sqlite/configure
-  INSTALL_COMMAND ""
-  BUILD_COMMAND make && make sqlite3.c)
+  BUILD_COMMAND make && make sqlite3.c
+  INSTALL_COMMAND cp ${CMAKE_BINARY_DIR}/sqlite-build/sqlite3 ${CMAKE_BINARY_DIR}/final-exe/sqlite3_$ENV{TPCP_OPTIONS})
   
 ExternalProject_Add(tar
   SOURCE_DIR   ${CMAKE_SOURCE_DIR}/tar-1.32
   BINARY_DIR   ${CMAKE_BINARY_DIR}/tar-build
   CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/tar-1.32/configure
-  INSTALL_COMMAND ""
-  BUILD_COMMAND make)
+  BUILD_COMMAND make
+  INSTALL_COMMAND cp ${CMAKE_BINARY_DIR}/tar-build/src/tar ${CMAKE_BINARY_DIR}/final-exe/tar_$ENV{TPCP_OPTIONS})
 
 
 # file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/sqlite-build)
