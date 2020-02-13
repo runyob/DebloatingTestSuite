@@ -1,0 +1,30 @@
+language: cpp
+
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      compiler: gcc
+      arch: amd64
+
+before_install:
+    # Combine global build options with OS/compiler-dependent options
+    - export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
+    - export CXX_FLAGS=${CXX_FLAGS}" "${ENV_CXX_FLAGS}
+    
+script:
+    ############################################################################
+    # Build main and tests
+    ############################################################################
+     - mkdir -p build
+     - cd build
+     - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON .. 
+     - make
+
+branches:
+  only:
+  - master
+
+env:
+  global:
+  - LANG="en_US.UTF-8"
