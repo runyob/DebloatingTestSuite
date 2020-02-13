@@ -10,8 +10,10 @@ matrix:
 before_install:
 - export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
 - export CXX_FLAGS=${CXX_FLAGS}" "${ENV_CXX_FLAGS}
-- sudo apt-get update
-- sudo apt-get -y install makeinfo
+- if [ ${TRAVIS_OS_NAME} == "linux" ]; then
+    sudo apt-get update &&
+    sudo apt-get install -y texinfo;
+  fi
 
 script:
 - mkdir -p build
